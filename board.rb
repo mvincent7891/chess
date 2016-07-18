@@ -2,7 +2,7 @@ require_relative "display"
 require_relative "pieces"
 
 class Board
-  attr_reader :display
+  attr_reader :display, :grid
   attr_accessor :test_moves
 
   def initialize
@@ -48,6 +48,18 @@ class Board
     @grid
   end
 
+  def dup
+    duplicate_board = Board.new
+    duplicate_board.grid.flatten.each do |piece|
+      if piece.is_a?(NullPiece)
+        piece = NullPiece.instance
+      else
+        piece = self[piece.pos].dup
+      end
+    end
+    duplicate_board
+  end
+
   def render
     @display.render
   end
@@ -65,13 +77,19 @@ class Board
 end
 
 b = Board.new
+c = b.dup
+c[[0,0]], c[[0,1]] = c[[0,1]], c[[0,0]]
+b.render
+
+
+# p y.pos
 # pos_test = [3,5]
 # test2 = [3,4]
 # b[pos_test] = Pawn.new(b, :white, pos_test)
 # b[pos_test].en_passant = true
 # b[test2] = Pawn.new(b, :black, test2)
 # b.test_moves = b[test2].get_valid_moves
-b.display.render
+# b.display.render
 # while true
 #   from_pos, to_pos = nil, nil
 #   until from_pos && to_pos
@@ -82,6 +100,6 @@ b.display.render
 #       from_pos = b.display.get_input
 #     end
 #   end
-  # b.move(from_pos, to_pos)
-  # b.display.render
+#   b.move(from_pos, to_pos)
+#   b.display.render
 # end

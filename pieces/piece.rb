@@ -22,9 +22,12 @@ class Piece
   end
 
   def valid_moves
+    moves = get_valid_moves
+    moves.reject { |move| moves_into_check?(move)}
   end
 
   def move_into_check?(to_pos)
+
   end
 
   def enemy_present?(to_pos)
