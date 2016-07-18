@@ -8,17 +8,21 @@ class Board
   def initialize
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
     @display = Display.new(self)
+    @test_moves = []
+    populate
   end
 
-  def full?
-    @grid.all? do |row|
-      row.all? { |piece| piece.present? }
+  def populate
+    set_pawns(:black)
+    set_pawns(:white)
+  end
+
+  def set_pawns(color)
+    row = color == :black ? 1 : 6
+    @grid[row].each_index do |col|
+      pos = [row, col]
+      self[pos] = Pawn.new(self, color, pos)
     end
-  end
-
-  def mark(pos)
-    x, y = pos
-    @grid[x][y] = Piece.new
   end
 
   def move(start, end_pos)
@@ -50,12 +54,12 @@ class Board
 end
 
 b = Board.new
-pos_test = [3,5]
-test2 = [3,4]
-b[pos_test] = Pawn.new(b, :white, pos_test)
-b[pos_test].en_passant = true
-b[test2] = Pawn.new(b, :black, test2)
-b.test_moves = b[test2].get_valid_moves
+# pos_test = [3,5]
+# test2 = [3,4]
+# b[pos_test] = Pawn.new(b, :white, pos_test)
+# b[pos_test].en_passant = true
+# b[test2] = Pawn.new(b, :black, test2)
+# b.test_moves = b[test2].get_valid_moves
 b.display.render
 # while true
 #   from_pos, to_pos = nil, nil
