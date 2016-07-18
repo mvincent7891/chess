@@ -3,6 +3,7 @@ require_relative "pieces"
 
 class Board
   attr_reader :display
+  attr_accessor :test_moves
 
   def initialize
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
@@ -49,17 +50,23 @@ class Board
 end
 
 b = Board.new
-b[[0,0]] = Piece.new
-while true
-  from_pos, to_pos = nil, nil
-  until from_pos && to_pos
-    b.display.render
-    if from_pos
-      to_pos = b.display.get_input
-    else
-      from_pos = b.display.get_input
-    end
-  end
-  b.move(from_pos, to_pos)
-  b.display.render
-end
+pos_test = [3,5]
+test2 = [3,4]
+b[pos_test] = Pawn.new(b, :white, pos_test)
+b[pos_test].en_passant = true
+b[test2] = Pawn.new(b, :black, test2)
+b.test_moves = b[test2].get_valid_moves
+b.display.render
+# while true
+#   from_pos, to_pos = nil, nil
+#   until from_pos && to_pos
+#     b.display.render
+#     if from_pos
+#       to_pos = b.display.get_input
+#     else
+#       from_pos = b.display.get_input
+#     end
+#   end
+  # b.move(from_pos, to_pos)
+  # b.display.render
+# end

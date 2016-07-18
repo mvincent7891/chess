@@ -25,12 +25,14 @@ class Display
   def colors_for(i, j)
     if [i, j] == @cursor_pos
       bg = :red
+    elsif @board.test_moves.include?([i,j])
+      bg = :yellow
     elsif (i + j).odd?
-      bg = :black
+      bg = :light_blue
     else
-      bg = :grey
+      bg = :blue
     end
-    { background: bg, color: :white }
+    { background: bg, color: @board[[i,j]].color }
   end
 
   def render
