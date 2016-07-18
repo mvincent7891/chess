@@ -8,5 +8,8 @@ class Rook < Piece
     super
   end
 
+  def to_s
+    " " + ("\u265C").encode('utf-8') + " "
+  end
 
 end

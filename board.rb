@@ -15,6 +15,17 @@ class Board
   def populate
     set_pawns(:black)
     set_pawns(:white)
+    set_back_row(:black)
+    set_back_row(:white)
+  end
+
+  BACK_ROW = [:Rook, :Knight, :Bishop, :King, :Queen, :Bishop, :Knight, :Rook]
+  def set_back_row(color)
+    row = color == :black ? 0 : 7
+    @grid[row].each_index do |col|
+      pos = [row, col]
+      self[pos] = eval(BACK_ROW[col].to_s + ".new(self, color, pos)")
+    end
   end
 
   def set_pawns(color)

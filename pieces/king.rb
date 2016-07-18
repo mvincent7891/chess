@@ -8,5 +8,8 @@ class King < Piece
     super
   end
 
+  def to_s
+    " " + ("\u265A").encode('utf-8') + " "
+  end
 
 end

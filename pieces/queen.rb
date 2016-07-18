@@ -8,5 +8,8 @@ class Queen < Piece
     super
   end
 
+  def to_s
+    " " + ("\u265B").encode('utf-8') + " "
+  end
 
 end

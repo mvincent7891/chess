@@ -13,7 +13,7 @@ class Pawn < Piece
   end
 
   def to_s
-    " " + ("\u2659").encode('utf-8') + " "
+    " " + ("\u265F").encode('utf-8') + " "
   end
 
   def at_start_row?

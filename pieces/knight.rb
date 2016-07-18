@@ -17,5 +17,9 @@ class Knight < Piece
     super
   end
 
+  def to_s
+    " " + ("\u265E").encode('utf-8') + " "
+  end
+
 
 end

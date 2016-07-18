@@ -9,5 +9,8 @@ class Bishop < Piece
     super
   end
 
+  def to_s
+    " " + ("\u265D").encode('utf-8') + " "
+  end
 
 end
