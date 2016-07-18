@@ -32,10 +32,9 @@ class Pawn < Piece
 
     @attacking_moves.each do |move|
       next_pos = vector_addition(current_pos, move)
-      passant_pos = @board[vector_addition(next_pos, [-@direction, 0])]
       if enemy_present?(next_pos)
         valid_moves << next_pos
-      elsif enemy_present?(@board[vector_addition(next_pos, [-@direction, 0])]) &&
+      elsif enemy_present?(vector_addition(next_pos, [-@direction, 0])) &&
         @board[vector_addition(next_pos, [-@direction, 0])].en_passant
         valid_moves << next_pos
       end
