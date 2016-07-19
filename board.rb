@@ -1,3 +1,4 @@
+require 'byebug'
 require_relative "display"
 require_relative "pieces"
 
@@ -9,7 +10,7 @@ class Board
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
     @display = Display.new(self)
     @test_moves = []
-    populate
+    # populate
   end
 
   def populate
@@ -50,13 +51,18 @@ class Board
 
   def dup
     duplicate_board = Board.new
-    duplicate_board.grid.flatten.each do |piece|
-      if piece.is_a?(NullPiece)
-        piece = NullPiece.instance
-      else
-        piece = self[piece.pos].dup
+
+    self.grid.each_with_index do |row, i|
+      row.each_with_index do |col, j|
+        pos = [i,j]
+        if self[pos].is_a?(NullPiece)
+          duplicate_board[pos] = NullPiece.instance
+        else
+          duplicate_board[pos] = self[pos].dup
+        end
       end
     end
+
     duplicate_board
   end
 
@@ -74,22 +80,43 @@ class Board
     @grid[x][y] = piece
   end
 
+  def in_check?(color)
+    king_pos = find_king(color)
+    opponent_pieces = @grid.flatten.select { |piece| piece.color == opposite_color(color) }
+    debugger
+    opponent_pieces.any? {|piece| piece.valid_moves_prime.include?(king_pos)}
+  end
+
+  def opposite_color(color)
+    color == :white ? :black : :white
+  end
+
+  def find_king(color)
+    king_piece = @grid.flatten.select.with_index do |piece, i|
+      piece.color == color && piece.is_a?(King)
+    end
+    king_piece[0].pos
+  end
+
 end
 
 b = Board.new
+b[[0,0]] = King.new(b, :white, [0,0])
+b[[1,7]] = Queen.new(b, :black, [1,7])
 c = b.dup
-c[[0,0]], c[[0,1]] = c[[0,1]], c[[0,0]]
-b.render
+c[[0,0]], c[[1,0]] = c[[1,0]], c[[0,0]]
+p c.find_king(:white)
+
+# p b[[0,0]].valid_moves
 
 
-# p y.pos
 # pos_test = [3,5]
 # test2 = [3,4]
 # b[pos_test] = Pawn.new(b, :white, pos_test)
 # b[pos_test].en_passant = true
 # b[test2] = Pawn.new(b, :black, test2)
 # b.test_moves = b[test2].get_valid_moves
-# b.display.render
+
 # while true
 #   from_pos, to_pos = nil, nil
 #   until from_pos && to_pos

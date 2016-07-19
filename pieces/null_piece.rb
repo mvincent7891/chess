@@ -6,7 +6,7 @@ class NullPiece
 
   def initialize
     @en_passant = false
-    @color = :white
+    @color = :grey
   end
 
   def to_s
