@@ -39,7 +39,10 @@ class ComputerPlayer < Player
     # get_all_valid_moves.sample
 
     # Choose Random Attack
-    choose_random_attack
+    # choose_random_attack
+
+    # Choose Fortified Move
+    sort_moves!(get_all_valid_moves) { |move| strong_move?(move)}[0]
   end
 
   def get_all_attacks(board = @board)
@@ -50,7 +53,15 @@ class ComputerPlayer < Player
 
   def choose_random_attack(board = @board)
     attacks, moves = get_all_attacks(board)
-    attacks.count > 0 ? attacks.sample : moves.sample
+    attacks.count > 0 ? attacks.sample : moves.samplexit
+  end
+
+  def sort_moves!(moves, &prc)
+    return moves unless block_given?
+    indices = []
+    moves.each_with_index { |el, i| indices << i if prc.call(el) }
+    indices.each { |index| moves.unshift(moves.delete_at(index)) }
+    moves
   end
 
   def get_all_valid_moves(board = @board)
@@ -80,7 +91,7 @@ class ComputerPlayer < Player
     dup_board[end_pos] = NullPiece.instance
     next_moves = get_all_valid_moves(dup_board)
     # make sure one of these moves can protect the freshly moved piece
-
+    next_moves.any? { |move| move[1] == end_pos }
   end
 
 
