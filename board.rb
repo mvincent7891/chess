@@ -39,6 +39,8 @@ class Board
 
   def move(start, end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
+    self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
+    self[start].pos = start unless self[start].is_a?(NullPiece)
   end
 
   def in_bounds?(pos)
@@ -53,12 +55,12 @@ class Board
     duplicate_board = Board.new
 
     self.grid.each_with_index do |row, i|
-      row.each_with_index do |col, j|
+      row.each_with_index do |piece, j|
         pos = [i,j]
         if self[pos].is_a?(NullPiece)
           duplicate_board[pos] = NullPiece.instance
         else
-          duplicate_board[pos] = self[pos].dup
+          duplicate_board[pos] = self[pos].dup(duplicate_board)
         end
       end
     end
@@ -83,7 +85,6 @@ class Board
   def in_check?(color)
     king_pos = find_king(color)
     opponent_pieces = @grid.flatten.select { |piece| piece.color == opposite_color(color) }
-    debugger
     opponent_pieces.any? {|piece| piece.valid_moves_prime.include?(king_pos)}
   end
 
@@ -103,11 +104,8 @@ end
 b = Board.new
 b[[0,0]] = King.new(b, :white, [0,0])
 b[[1,7]] = Queen.new(b, :black, [1,7])
-c = b.dup
-c[[0,0]], c[[1,0]] = c[[1,0]], c[[0,0]]
-p c.find_king(:white)
-
-# p b[[0,0]].valid_moves
+b.render
+p b[[0,0]].valid_moves
 
 
 # pos_test = [3,5]

@@ -31,8 +31,8 @@ class Piece
     moves.reject { |move| move_into_check?(move)}
   end
 
-  def dup
-    eval("#{self.class.to_s}.new(@board, @color, @pos)")
+  def dup(dup_board)
+    new_piece = eval("#{self.class.to_s}.new(dup_board, @color, @pos.dup)")
   end
 
   def valid_moves_prime
