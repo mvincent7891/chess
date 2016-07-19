@@ -46,11 +46,26 @@ class Board
     raise MoveIntoCheck if self[start].pos && self[start].move_into_check?(end_pos)
     raise BadMove unless is_valid
     raise WrongPlayer if self[start].color != @current_player
+    handle_pawns(start, end_pos)
+    move!(start, end_pos)
+  end
+
+  def handle_pawns(start, end_pos)
+
+    en_passant_pos = [start[0], end_pos[1]]
+    if self[en_passant_pos].en_passant && (start[1] != end_pos[1])
+      # taking a piece en_passant
+      self[en_passant_pos] = NullPiece.instance
+    end
+
+    if self[start].at_start_row && (start[0] - end_pos[0]).abs == 2
+      # flag the piece as being vulnerable to en passant
+      self[start].en_passant = true
+    else
+      self[start].en_passant = false
+    end
+
     self[start].at_start_row = false
-    handle_attack(end_pos) if attack?(end_pos)
-    self[end_pos], self[start] = self[start], self[end_pos]
-    self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
-    self[start].pos = start unless self[start].is_a?(NullPiece)
   end
 
   def attack?(end_pos)

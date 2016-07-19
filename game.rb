@@ -57,9 +57,10 @@ class Game
       end
       switch_players!
     end
-    # find losing kind
+
     losing_king_pos = @board.find_king(@current_player.color)
-    # make sad face
+    winning_king_pos = @board.find_king(@next_player.color)
+    @board[winning_king_pos].string = " " + ("\u263A").encode('utf-8') + " "
     @board[losing_king_pos].string = " " + ("\u2639").encode('utf-8') + " "
     @board.render
     puts "Game over! #{@next_player.name} wins!"
