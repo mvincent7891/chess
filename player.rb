@@ -1,3 +1,4 @@
+require 'byebug'
 class Player
 
   attr_reader :name
@@ -33,10 +34,20 @@ class ComputerPlayer < Player
 
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
+    # pieces = get_pieces_with_moves
+    # random_piece = pieces.sample
+    # random_move = random_piece.valid_moves.sample
+    # [random_piece.pos, random_move]
+    get_all_valid_moves.sample
+  end
+
+  def get_all_valid_moves
     pieces = get_pieces_with_moves
-    random_piece = pieces.sample
-    random_move = random_piece.valid_moves.sample
-    [random_piece.pos, random_move]
+    all_valid_moves = []
+    pieces.each do |piece|
+      piece.valid_moves.each { |move| all_valid_moves << [piece.pos, move]}
+    end
+    all_valid_moves
   end
 
   def get_pieces_with_moves
