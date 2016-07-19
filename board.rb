@@ -88,6 +88,12 @@ class Board
     opponent_pieces.any? {|piece| piece.valid_moves_prime.include?(king_pos)}
   end
 
+  def check_mate?(color)
+    pieces = @grid.flatten.select { |piece| piece.color == color }
+    no_moves = pieces.all? { |piece| piece.valid_moves.count.zero?}
+    in_check?(color) && no_moves
+  end
+
   def opposite_color(color)
     color == :white ? :black : :white
   end
@@ -104,8 +110,12 @@ end
 b = Board.new
 b[[0,0]] = King.new(b, :white, [0,0])
 b[[1,7]] = Queen.new(b, :black, [1,7])
+b[[5,5]] = Pawn.new(b, :white, [5,5])
+b[[5,1]] = Rook.new(b, :black, [5,1])
+b[[3,0]] = Rook.new(b, :black, [3,0])
+
 b.render
-p b[[0,0]].valid_moves
+p b.check_mate?(:white)
 
 
 # pos_test = [3,5]
