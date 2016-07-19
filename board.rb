@@ -21,7 +21,7 @@ class Board
     set_back_row(Game::COLOR2)
   end
 
-  BACK_ROW = [:Rook, :Knight, :Bishop, :King, :Queen, :Bishop, :Knight, :Rook]
+  BACK_ROW = [:Rook, :Knight, :Bishop, :Queen, :King, :Bishop, :Knight, :Rook]
   def set_back_row(color)
     row = color == Game::COLOR1 ? 0 : 7
     @grid[row].each_index do |col|
@@ -53,7 +53,7 @@ class Board
   def handle_pawns(start, end_pos)
 
     en_passant_pos = [start[0], end_pos[1]]
-    if self[en_passant_pos].en_passant && (start[1] != end_pos[1])
+    if self[en_passant_pos].en_passant && (start[1] != end_pos[1]) && self[start].is_a?(Pawn)
       # taking a piece en_passant
       self[en_passant_pos] = NullPiece.instance
     end

@@ -28,9 +28,9 @@ class Display
     elsif @board.test_moves.include?([i,j])
       bg = :light_yellow
     elsif (i + j).odd?
-      bg = :white
-    else
       bg = :light_black
+    else
+      bg = :white
     end
     { background: bg, color: @board[[i,j]].color }
   end

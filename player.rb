@@ -51,12 +51,21 @@ class ComputerPlayer < Player
     f = fortified_attack
     return f if f
 
-    # *** Choose Attack
+    # *** Choose Top Attack
     a = get_top_attack
     return a if a
 
+    m = get_all_valid_moves
     # *** Choose Fortified Move
-    sort_moves!(get_all_valid_moves) { |move| fortified_move?(move)}[0]
+    g = m.select { |move| fortified_move?(move) }.sample
+    return g if g
+
+    # *** Put In check
+    c = m.select { |move| put_in_check?(move) }.sample
+    return c if c
+
+    # *** Choose Random Move
+    m.sample
 
   end
 
@@ -77,10 +86,10 @@ class ComputerPlayer < Player
     attacks[0]
   end
 
-  # def get_rand_attack(board = @board)
-  #   attacks, _ = get_all_attacks(board)
-  #   return attacks.empty? ? nil : attacks[0]]
-  # end
+  def get_rand_attack(board = @board)
+    attacks, _ = get_all_attacks(board)
+    return attacks.empty? ? nil : attacks[0]
+  end
 
   def get_all_attacks(board = @board)
     moves = get_all_valid_moves(board)
@@ -99,6 +108,13 @@ class ComputerPlayer < Player
     moves.each_with_index { |el, i| indices << i if prc.call(el) }
     indices.each { |index| moves.unshift(moves.delete_at(index)) }
     moves
+  end
+
+  def put_in_check?(move, board = @board)
+    start, end_pos = move
+    dup_board = @board.dup
+    dup_board.move!(start, end_pos)
+    dup_board.in_check?(dup_board.opposite_color(@color))
   end
 
   def get_all_valid_moves(board = @board)

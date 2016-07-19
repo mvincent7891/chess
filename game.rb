@@ -16,8 +16,8 @@ class Game
 
   def initialize(player1, player2)
     @board = Board.new
-    @current_player = ComputerPlayer.new(player1, @board)
-    @next_player = Player.new(player2, @board)
+    @current_player = Player.new(player1, @board)
+    @next_player = ComputerPlayer.new(player2, @board)
     assign_colors
     @board.current_player = @current_player.color
   end

@@ -30,6 +30,7 @@ class Piece
 
   def valid_moves
     moves = get_valid_moves
+    
     moves.reject { |move| move_into_check?(move)}
   end
 
