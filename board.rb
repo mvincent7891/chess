@@ -4,12 +4,13 @@ require_relative "pieces"
 
 class Board
   attr_reader :display, :grid
-  attr_accessor :test_moves
+  attr_accessor :test_moves, :current_player
 
   def initialize
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
     @display = Display.new(self)
     @test_moves = []
+    @current_player = nil
     populate
   end
 
@@ -38,15 +39,31 @@ class Board
   end
 
   def move(start, end_pos)
-    is_valid = self[start].valid_moves.include?(end_pos)
-    raise MoveIntoCheck if self[start].move_into_check?(end_pos)
-    raise ArgumentError unless is_valid
+    is_valid = !self[start].empty? &&
+      self[start].valid_moves.include?(end_pos)
+
+    # debugger
+    raise MoveIntoCheck if self[start].pos && self[start].move_into_check?(end_pos)
+    raise BadMove unless is_valid
+    raise WrongPlayer if self[start].color != @current_player
+
+
+    handle_attack(end_pos) if attack?(end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
     self[start].pos = start unless self[start].is_a?(NullPiece)
   end
 
+  def attack?(end_pos)
+    !self[end_pos].empty?
+  end
+
+  def handle_attack(end_pos)
+    self[end_pos] = NullPiece.instance
+  end
+
   def move!(start, end_pos)
+    handle_attack(end_pos) if attack?(end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
     self[start].pos = start unless self[start].is_a?(NullPiece)
@@ -119,7 +136,13 @@ end
 class MoveIntoCheck < ArgumentError
 end
 
-b = Board.new
+class WrongPlayer < StandardError
+end
+
+class BadMove < StandardError
+end
+
+# b = Board.new
 # b[[0,0]] = King.new(b, :white, [0,0])
 # b[[1,7]] = Queen.new(b, :black, [1,7])
 # b[[5,5]] = Pawn.new(b, :white, [5,5])
@@ -138,16 +161,16 @@ b = Board.new
 # b.test_moves = b[test2].get_valid_moves
 
 
-while true
-  from_pos, to_pos = nil, nil
-  until from_pos && to_pos
-    b.display.render
-    if from_pos
-      to_pos = b.display.get_input
-    else
-      from_pos = b.display.get_input
-    end
-  end
-  b.move(from_pos, to_pos)
-  b.display.render
-end
+# while true
+#   from_pos, to_pos = nil, nil
+#   until from_pos && to_pos
+#     b.display.render
+#     if from_pos
+#       to_pos = b.display.get_input
+#     else
+#       from_pos = b.display.get_input
+#     end
+#   end
+#   b.move(from_pos, to_pos)
+#   b.display.render
+# end

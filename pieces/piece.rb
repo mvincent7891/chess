@@ -1,3 +1,4 @@
+require 'byebug'
 
 class Piece
   attr_reader :color
@@ -28,6 +29,7 @@ class Piece
 
   def valid_moves
     moves = get_valid_moves
+    debugger if self.is_a?(Bishop)
     moves.reject { |move| move_into_check?(move)}
   end
 
