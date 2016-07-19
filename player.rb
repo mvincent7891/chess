@@ -12,6 +12,7 @@ class Player
     from_pos, to_pos = nil, nil
     message ||= "#{@name} it is your turn. You are #{@color}."
     until from_pos && to_pos
+      @board.test_moves = @board[from_pos].valid_moves if from_pos
       @board.display.render
       puts message
       if from_pos
@@ -22,6 +23,7 @@ class Player
         from_pos = @board.display.get_input
       end
     end
+    @board.test_moves = []
     [from_pos, to_pos]
   end
 

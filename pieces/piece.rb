@@ -2,9 +2,10 @@ require 'byebug'
 
 class Piece
   attr_reader :color
-  attr_accessor :pos, :en_passant
+  attr_accessor :pos, :en_passant, :at_start_row
 
   def initialize(board, color, pos)
+    @at_start_row = false
     @board = board
     @color = color
     @pos = pos
@@ -29,7 +30,6 @@ class Piece
 
   def valid_moves
     moves = get_valid_moves
-    debugger if self.is_a?(Bishop)
     moves.reject { |move| move_into_check?(move)}
   end
 

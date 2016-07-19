@@ -5,6 +5,7 @@ class NullPiece
   include Singleton
 
   def initialize
+    @at_start_row = false
     @en_passant = false
     @color = :grey
     @pos = nil

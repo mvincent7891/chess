@@ -39,14 +39,14 @@ class Board
   end
 
   def move(start, end_pos)
+
     is_valid = !self[start].empty? &&
       self[start].valid_moves.include?(end_pos)
 
-    # debugger
     raise MoveIntoCheck if self[start].pos && self[start].move_into_check?(end_pos)
     raise BadMove unless is_valid
     raise WrongPlayer if self[start].color != @current_player
-
+    self[start].at_start_row = false
     handle_attack(end_pos) if attack?(end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)

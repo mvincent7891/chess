@@ -4,12 +4,11 @@ class Pawn < Piece
   UP = -1
 
   def initialize(board, color, pos)
-
-    @at_start_row = true
     @direction = pos[0] == 1 ? DOWN : UP
     @forward_moves = [[@direction * 2, 0], [@direction, 0]]
     @attacking_moves = [[@direction, 1],[@direction, -1]]
     super
+    @at_start_row = true
   end
 
   def to_s
