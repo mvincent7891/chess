@@ -71,8 +71,24 @@ class Board
   def queen_me!(start, end_pos)
     back_row = (end_pos[0] == 0 || end_pos[0] == 7)
     if self[start].is_a?(Pawn) && back_row
+      flag = true
+      while flag
+        puts "Choose new piece (q = queen, r = rook, k = knight, b = bishop):"
+        choice = gets.chomp
+        flag = false if ['r','q','k','b'].include?(choice)
+      end
+      choice_class = case choice
+      when 'q'
+        'Queen'
+      when 'r'
+        'Rook'
+      when 'k'
+        'Knight'
+      when 'b'
+        'Bishop'
+      end
       color = self[start].color
-      self[start] = Queen.new(self, color, start)
+      self[start] = eval("#{choice_class}.new(self, color, start)")
     end
   end
 
