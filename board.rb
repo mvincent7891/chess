@@ -15,15 +15,15 @@ class Board
   end
 
   def populate
-    set_pawns(:black)
-    set_pawns(:white)
-    set_back_row(:black)
-    set_back_row(:white)
+    set_pawns(Game::COLOR1)
+    set_pawns(Game::COLOR2)
+    set_back_row(Game::COLOR1)
+    set_back_row(Game::COLOR2)
   end
 
   BACK_ROW = [:Rook, :Knight, :Bishop, :King, :Queen, :Bishop, :Knight, :Rook]
   def set_back_row(color)
-    row = color == :black ? 0 : 7
+    row = color == Game::COLOR1 ? 0 : 7
     @grid[row].each_index do |col|
       pos = [row, col]
       self[pos] = eval(BACK_ROW[col].to_s + ".new(self, color, pos)")
@@ -31,7 +31,7 @@ class Board
   end
 
   def set_pawns(color)
-    row = color == :black ? 1 : 6
+    row = color == Game::COLOR1 ? 1 : 6
     @grid[row].each_index do |col|
       pos = [row, col]
       self[pos] = Pawn.new(self, color, pos)
@@ -120,7 +120,7 @@ class Board
   end
 
   def opposite_color(color)
-    color == :white ? :black : :white
+    color == Game::COLOR2 ? Game::COLOR1 : Game::COLOR2
   end
 
   def find_king(color)
@@ -142,9 +142,9 @@ class BadMove < StandardError
 end
 
 # b = Board.new
-# b[[0,0]] = King.new(b, :white, [0,0])
+# b[[0,0]] = King.new(b, :light_white, [0,0])
 # b[[1,7]] = Queen.new(b, :black, [1,7])
-# b[[5,5]] = Pawn.new(b, :white, [5,5])
+# b[[5,5]] = Pawn.new(b, :light_white, [5,5])
 # b[[5,1]] = Rook.new(b, :black, [5,1])
 # b[[3,0]] = Rook.new(b, :black, [3,0])
 

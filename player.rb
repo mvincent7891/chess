@@ -10,7 +10,7 @@ class Player
 
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
-    message ||= "#{@name} it is your turn. You are #{@color}."
+    message ||= "#{@name} it is your turn. You are #{@color[-5..-1]}."
     until from_pos && to_pos
       @board.test_moves = @board[from_pos].valid_moves if from_pos
       @board.display.render
