@@ -39,6 +39,7 @@ class Board
 
   def move(start, end_pos)
     is_valid = self[start].valid_moves.include?(end_pos)
+    raise MoveIntoCheck if self[start].move_into_check?(end_pos)
     raise ArgumentError unless is_valid
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
@@ -115,6 +116,9 @@ class Board
 
 end
 
+class MoveIntoCheck < ArgumentError
+end
+
 b = Board.new
 # b[[0,0]] = King.new(b, :white, [0,0])
 # b[[1,7]] = Queen.new(b, :black, [1,7])
@@ -132,6 +136,7 @@ b = Board.new
 # b[pos_test].en_passant = true
 # b[test2] = Pawn.new(b, :black, test2)
 # b.test_moves = b[test2].get_valid_moves
+
 
 while true
   from_pos, to_pos = nil, nil
