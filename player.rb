@@ -27,5 +27,25 @@ class Player
     [from_pos, to_pos]
   end
 
+end
+
+class ComputerPlayer < Player
+
+  def get_input(message = nil)
+    from_pos, to_pos = nil, nil
+    pieces = get_pieces_with_moves
+    random_piece = pieces.sample
+    random_move = random_piece.valid_moves.sample
+    [random_piece.pos, random_move]
+  end
+
+  def get_pieces_with_moves
+    pieces = get_all_pieces
+    pieces.select { |piece| piece.valid_moves.count > 0}
+  end
+
+  def get_all_pieces
+    @board.grid.flatten.select { |piece| piece.color == @color }
+  end
 
 end
