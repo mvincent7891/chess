@@ -32,6 +32,8 @@ end
 
 class ComputerPlayer < Player
 
+  RANK = {Class::Queen => 0, Class::Knight => 1, Class::Bishop => 2, Class::Rook => 3, Class::Pawn => 4}
+
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
 
@@ -42,9 +44,43 @@ class ComputerPlayer < Player
     # choose_random_attack
 
     # *** Choose Fortified Move
-    get_weak_pieces
-    sort_moves!(get_all_valid_moves) { |move| strong_move?(move)}[0]
+    # get_weak_pieces
+    # sort_moves!(get_all_valid_moves) { |move| fortified_move?(move)}[0]
+
+    # *** Choose Fortified Attack
+    f = fortified_attack
+    return f if f
+
+    # *** Choose Attack
+    a = get_top_attack
+    return a if a
+
+    # *** Choose Fortified Move
+    sort_moves!(get_all_valid_moves) { |move| fortified_move?(move)}[0]
+
   end
+
+  def fortified_attack(board = @board)
+    attacks, _ = get_all_attacks(board)
+    f_attacks = attacks.select { |attack| fortified_move?(attack)}
+    return f_attacks.empty? ? nil : f_attacks[0]
+  end
+
+  def attack?(move, board = @board)
+    attacks, _ = get_all_attacks(board)
+    attacks.include?(move)
+  end
+
+  def get_top_attack(board = @board)
+    attacks, _ = get_all_attacks(board)
+    attacks.sort! { |attack| RANK[@board[attack[1]].class] }
+    attacks[0]
+  end
+
+  # def get_rand_attack(board = @board)
+  #   attacks, _ = get_all_attacks(board)
+  #   return attacks.empty? ? nil : attacks[0]]
+  # end
 
   def get_all_attacks(board = @board)
     moves = get_all_valid_moves(board)
@@ -85,12 +121,10 @@ class ComputerPlayer < Player
 
   def get_weak_pieces(board = @board, player = @color)
     pieces = get_all_pieces(board, player)
-    weak_pieces = pieces.select { |piece| !strong_move?([piece.pos, piece.pos]) }
-    debugger
-    weak_pieces
+    weak_pieces = pieces.select { |piece| !fortified_move?([piece.pos, piece.pos]) }
   end
 
-  def strong_move?(move)
+  def fortified_move?(move)
     # Return true if moving into line of attack of friendly piece,
     # i.e. move is fortified by another piece's line of attack
     start, end_pos = move
