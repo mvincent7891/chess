@@ -1,6 +1,12 @@
 require_relative "board.rb"
 require_relative "player.rb"
 
+# Notes:
+# Debugger currently in bishop move case
+# Pawn is still able to move 2 pieces after first move
+# There is no game over check
+# No castling, no en passant, no pawn to back row
+
 class Game
   def initialize(player1, player2)
     @board = Board.new

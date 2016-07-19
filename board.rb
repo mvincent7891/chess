@@ -47,7 +47,6 @@ class Board
     raise BadMove unless is_valid
     raise WrongPlayer if self[start].color != @current_player
 
-
     handle_attack(end_pos) if attack?(end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
