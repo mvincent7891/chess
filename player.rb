@@ -35,13 +35,14 @@ class ComputerPlayer < Player
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
 
-    # Choose Random
+    # *** Choose Random
     # get_all_valid_moves.sample
 
-    # Choose Random Attack
+    # *** Choose Random Attack
     # choose_random_attack
 
-    # Choose Fortified Move
+    # *** Choose Fortified Move
+    get_weak_pieces
     sort_moves!(get_all_valid_moves) { |move| strong_move?(move)}[0]
   end
 
@@ -78,19 +79,27 @@ class ComputerPlayer < Player
     pieces.select { |piece| piece.valid_moves.count > 0}
   end
 
-  def get_all_pieces(board = @board)
-    board.grid.flatten.select { |piece| piece.color == @color }
+  def get_all_pieces(board = @board, player = @color)
+    board.grid.flatten.select { |piece| piece.color == player }
+  end
+
+  def get_weak_pieces(board = @board, player = @color)
+    pieces = get_all_pieces(board, player)
+    weak_pieces = pieces.select { |piece| !strong_move?([piece.pos, piece.pos]) }
+    debugger
+    weak_pieces
   end
 
   def strong_move?(move)
     # Return true if moving into line of attack of friendly piece,
     # i.e. move is fortified by another piece's line of attack
     start, end_pos = move
+    color = @board[start].color
     # Need to update logic here - but for now at least won't move into check
     return true if @board[start].is_a?(King)
     dup_board = @board.dup
     dup_board.move!(start, end_pos)
-    dup_board[end_pos] = NullPiece.instance
+    dup_board[end_pos] = Pawn.new(dup_board, dup_board.opposite_color(color), end_pos)
     next_moves = get_all_valid_moves(dup_board)
     # make sure one of these moves can protect the freshly moved piece
     next_moves.any? { |move| move[1] == end_pos }

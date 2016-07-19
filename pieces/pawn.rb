@@ -25,7 +25,8 @@ class Pawn < Piece
 
     @forward_moves.each_with_index do |move, index|
       next_pos = vector_addition(current_pos, move)
-      next if index == 0 && !@at_start_row
+      blocking_space = vector_addition(current_pos, @forward_moves[1])
+      next if index == 0 && (!@at_start_row || !@board[blocking_space].empty?)
       valid_moves << next_pos if valid_move?(next_pos)
     end
 
