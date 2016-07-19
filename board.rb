@@ -10,7 +10,7 @@ class Board
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
     @display = Display.new(self)
     @test_moves = []
-    # populate
+    populate
   end
 
   def populate
@@ -38,6 +38,14 @@ class Board
   end
 
   def move(start, end_pos)
+    is_valid = self[start].valid_moves.include?(end_pos)
+    raise ArgumentError unless is_valid
+    self[end_pos], self[start] = self[start], self[end_pos]
+    self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
+    self[start].pos = start unless self[start].is_a?(NullPiece)
+  end
+
+  def move!(start, end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)
     self[start].pos = start unless self[start].is_a?(NullPiece)
@@ -108,14 +116,14 @@ class Board
 end
 
 b = Board.new
-b[[0,0]] = King.new(b, :white, [0,0])
-b[[1,7]] = Queen.new(b, :black, [1,7])
-b[[5,5]] = Pawn.new(b, :white, [5,5])
-b[[5,1]] = Rook.new(b, :black, [5,1])
-b[[3,0]] = Rook.new(b, :black, [3,0])
+# b[[0,0]] = King.new(b, :white, [0,0])
+# b[[1,7]] = Queen.new(b, :black, [1,7])
+# b[[5,5]] = Pawn.new(b, :white, [5,5])
+# b[[5,1]] = Rook.new(b, :black, [5,1])
+# b[[3,0]] = Rook.new(b, :black, [3,0])
 
-b.render
-p b.check_mate?(:white)
+# b.render
+# p b.check_mate?(:white)
 
 
 # pos_test = [3,5]
@@ -125,16 +133,16 @@ p b.check_mate?(:white)
 # b[test2] = Pawn.new(b, :black, test2)
 # b.test_moves = b[test2].get_valid_moves
 
-# while true
-#   from_pos, to_pos = nil, nil
-#   until from_pos && to_pos
-#     b.display.render
-#     if from_pos
-#       to_pos = b.display.get_input
-#     else
-#       from_pos = b.display.get_input
-#     end
-#   end
-#   b.move(from_pos, to_pos)
-#   b.display.render
-# end
+while true
+  from_pos, to_pos = nil, nil
+  until from_pos && to_pos
+    b.display.render
+    if from_pos
+      to_pos = b.display.get_input
+    else
+      from_pos = b.display.get_input
+    end
+  end
+  b.move(from_pos, to_pos)
+  b.display.render
+end
