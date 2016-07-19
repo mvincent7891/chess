@@ -34,11 +34,16 @@ class ComputerPlayer < Player
 
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
-    # pieces = get_pieces_with_moves
-    # random_piece = pieces.sample
-    # random_move = random_piece.valid_moves.sample
-    # [random_piece.pos, random_move]
-    get_all_valid_moves.sample
+    # Choose Random
+    # get_all_valid_moves.sample
+    # Choose Random Attack
+    choose_random_attack
+  end
+
+  def choose_random_attack
+    moves = get_all_valid_moves
+    attacks = moves.select { |move| @board[move[0]].enemy_present?(move[1])}
+    attacks.count > 0 ? attacks.sample : moves.sample
   end
 
   def get_all_valid_moves
