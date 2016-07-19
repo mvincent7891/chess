@@ -8,6 +8,12 @@ require_relative "player.rb"
 # No castling, no en passant, no pawn to back row
 
 class Game
+
+  # Game::COLOR1
+  COLOR1 = :black
+  # Game::COLOR1
+  COLOR2 = :light_white
+
   def initialize(player1, player2)
     @board = Board.new
     @current_player = Player.new(player1, @board)
@@ -17,7 +23,7 @@ class Game
   end
 
   def assign_colors
-    colors = [:white, :black]
+    colors = [COLOR2, COLOR1]
     color1 = colors.sample
     color2 = (colors - [color1])[0]
     @current_player.color = color1
@@ -30,7 +36,7 @@ class Game
   end
 
   def play
-    switch_players! unless @current_player.color == :white
+    switch_players! unless @current_player.color == COLOR2
     until game_over?
       message = nil
       begin
@@ -51,11 +57,17 @@ class Game
       end
       switch_players!
     end
+    # find losing kind
+    losing_king_pos = @board.find_king(@current_player.color)
+    # make sad face
+    @board[losing_king_pos].string = " " + ("\u2639").encode('utf-8') + " "
+    @board.render
+    puts "Game over! #{@next_player.name} wins!"
 
   end
 
   def game_over?
-    false
+    @board.check_mate?(COLOR1) || @board.check_mate?(COLOR2)
   end
 
 end

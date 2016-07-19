@@ -26,11 +26,11 @@ class Display
     if [i, j] == @cursor_pos
       bg = :red
     elsif @board.test_moves.include?([i,j])
-      bg = :yellow
+      bg = :light_yellow
     elsif (i + j).odd?
-      bg = :light_blue
+      bg = :white
     else
-      bg = :blue
+      bg = :light_black
     end
     { background: bg, color: @board[[i,j]].color }
   end
