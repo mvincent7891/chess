@@ -86,6 +86,8 @@ class ComputerPlayer < Player
     # Return true if moving into line of attack of friendly piece,
     # i.e. move is fortified by another piece's line of attack
     start, end_pos = move
+    # Need to update logic here - but for now at least won't move into check
+    return true if @board[start].is_a?(King)
     dup_board = @board.dup
     dup_board.move!(start, end_pos)
     dup_board[end_pos] = NullPiece.instance

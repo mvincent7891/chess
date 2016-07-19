@@ -64,8 +64,16 @@ class Board
     else
       self[start].en_passant = false
     end
-
+    queen_me!(start, end_pos)
     self[start].at_start_row = false
+  end
+
+  def queen_me!(start, end_pos)
+    back_row = (end_pos[0] == 0 || end_pos[0] == 7)
+    if self[start].is_a?(Pawn) && back_row
+      color = self[start].color
+      self[start] = Queen.new(self, color, start)
+    end
   end
 
   def attack?(end_pos)
