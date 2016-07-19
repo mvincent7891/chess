@@ -1,7 +1,8 @@
 require "singleton"
 
 class NullPiece
-  attr_reader :en_passant, :color, :pos
+  attr_reader :color, :pos
+  attr_accessor :en_passant, :at_start_row
   include Singleton
 
   def initialize

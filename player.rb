@@ -12,14 +12,14 @@ class Player
     from_pos, to_pos = nil, nil
     message ||= "#{@name} it is your turn. You are #{@color[-5..-1]}."
     until from_pos && to_pos
-      @board.test_moves = @board[from_pos].valid_moves if from_pos
+      @board.test_moves = @board[from_pos].valid_moves if from_pos && !@board[from_pos].empty?
       @board.display.render
       puts message
       if from_pos
         puts "Move to where, #{@name}?"
         to_pos = @board.display.get_input
       else
-        puts "Select #{@color} piece, #{@name}:"
+        puts "Select #{@color[-5..-1]} piece, #{@name}:"
         from_pos = @board.display.get_input
       end
     end
