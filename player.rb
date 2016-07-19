@@ -34,20 +34,27 @@ class ComputerPlayer < Player
 
   def get_input(message = nil)
     from_pos, to_pos = nil, nil
+
     # Choose Random
     # get_all_valid_moves.sample
+
     # Choose Random Attack
     choose_random_attack
   end
 
-  def choose_random_attack
-    moves = get_all_valid_moves
-    attacks = moves.select { |move| @board[move[0]].enemy_present?(move[1])}
+  def get_all_attacks(board = @board)
+    moves = get_all_valid_moves(board)
+    attacks = moves.select { |move| board[move[0]].enemy_present?(move[1])}
+    [attacks, moves]
+  end
+
+  def choose_random_attack(board = @board)
+    attacks, moves = get_all_attacks(board)
     attacks.count > 0 ? attacks.sample : moves.sample
   end
 
-  def get_all_valid_moves
-    pieces = get_pieces_with_moves
+  def get_all_valid_moves(board = @board)
+    pieces = get_pieces_with_moves(board)
     all_valid_moves = []
     pieces.each do |piece|
       piece.valid_moves.each { |move| all_valid_moves << [piece.pos, move]}
@@ -55,13 +62,26 @@ class ComputerPlayer < Player
     all_valid_moves
   end
 
-  def get_pieces_with_moves
-    pieces = get_all_pieces
+  def get_pieces_with_moves(board = @board)
+    pieces = get_all_pieces(board)
     pieces.select { |piece| piece.valid_moves.count > 0}
   end
 
-  def get_all_pieces
-    @board.grid.flatten.select { |piece| piece.color == @color }
+  def get_all_pieces(board = @board)
+    board.grid.flatten.select { |piece| piece.color == @color }
   end
+
+  def strong_move?(move)
+    # Return true if moving into line of attack of friendly piece,
+    # i.e. move is fortified by another piece's line of attack
+    start, end_pos = move
+    dup_board = @board.dup
+    dup_board.move!(start, end_pos)
+    dup_board[end_pos] = NullPiece.instance
+    next_moves = get_all_valid_moves(dup_board)
+    # make sure one of these moves can protect the freshly moved piece
+
+  end
+
 
 end
