@@ -148,7 +148,7 @@ class RankBoard
       score += value
       # fortified = fortified?(piece.pos)
       # score += fortified ? value : -value
-      in_danger = in_danger?(piece.pos)
+      in_danger = in_danger?(piece.pos, color)
       score += in_danger ? -value : 0
     end
     score
@@ -165,8 +165,13 @@ class RankBoard
     fortified
   end
 
-  def in_danger?(pos)
-    @opponent_valid_moves.any? { |move| move[1] == pos}
+  def in_danger?(pos, color)
+    if color == @color
+      ans = @opponent_valid_moves.any? { |move| move[1] == pos}
+    else
+      ans = @valid_moves.any? { |move| move[1] == pos}
+    end
+    ans
   end
 
 end
