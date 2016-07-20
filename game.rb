@@ -16,8 +16,10 @@ class Game
 
   def initialize(player1, player2)
     @board = Board.new
-    @current_player = Player.new(player1, @board)
-    @next_player = Player.new(player2, @board)
+    @current_player = player1
+    player1.board = @board
+    @next_player = player2
+    player2.board = @board
     assign_colors
     @board.current_player = @current_player.color
   end
@@ -73,5 +75,23 @@ class Game
 
 end
 
-g = Game.new('Bill', 'Susan')
+choice = nil
+
+puts "Choose a game type (input number):"
+puts "1: Human v Human"
+puts "2: Computer v Human"
+puts "3: Computer v Computer"
+
+until [1,2,3].include?(choice)
+  choice = gets.chomp.to_i
+end
+
+case choice
+when 1
+  g = Game.new(Player.new('Bill'), Player.new('James'))
+when 2
+  g = Game.new(Player.new('Bill'), ComputerPlayer.new('James'))
+when 3
+  g = Game.new(ComputerPlayer.new('Bill'), ComputerPlayer.new('James'))
+end
 g.play

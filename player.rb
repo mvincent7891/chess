@@ -3,9 +3,9 @@ require 'byebug'
 class Player
 
   attr_reader :name
-  attr_accessor :color
+  attr_accessor :color, :board
 
-  def initialize(name, board)
+  def initialize(name, board = nil)
     @name = name
     @board = board
   end
