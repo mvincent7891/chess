@@ -46,8 +46,24 @@ class Board
     raise MoveIntoCheck if self[start].pos && self[start].move_into_check?(end_pos)
     raise BadMove unless is_valid
     raise WrongPlayer if self[start].color != @current_player
+    handle_castle(start, end_pos) if self[start].is_a?(King)
     handle_pawns(start, end_pos)
     move!(start, end_pos)
+  end
+
+  def handle_castle(start, end_pos)
+    delta = end_pos[1] - start[1]
+    row = start[0]
+    if delta == 2
+      corner = [row, 7]
+      move_rook = [row, 5]
+    elsif delta = -2
+      corner = [row, 0]
+      move_rook = [row, 3]
+    else
+      return
+    end
+    move!(corner, move_rook)
   end
 
   def handle_pawns(start, end_pos)
@@ -101,6 +117,7 @@ class Board
   end
 
   def move!(start, end_pos)
+    self[start].at_start_row = false
     handle_attack(end_pos) if attack?(end_pos)
     self[end_pos], self[start] = self[start], self[end_pos]
     self[end_pos].pos = end_pos unless self[end_pos].is_a?(NullPiece)

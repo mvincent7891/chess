@@ -5,7 +5,7 @@ class Piece
   attr_accessor :pos, :en_passant, :at_start_row
 
   def initialize(board, color, pos)
-    @at_start_row = false
+    @at_start_row = true
     @board = board
     @color = color
     @pos = pos
